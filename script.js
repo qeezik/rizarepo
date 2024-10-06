@@ -4,7 +4,7 @@ const stopBtn = document.getElementById('stopBtn');
 const seekBar = document.getElementById('seekBar');
 const fullScreenBtn = document.getElementById('fullScreenBtn');
 
-// Play/Pause video
+// Обработчик для кнопки Play/Pause
 playPauseBtn.addEventListener('click', () => {
     if (video.paused) {
         video.play();
@@ -15,30 +15,31 @@ playPauseBtn.addEventListener('click', () => {
     }
 });
 
-// Stop video
+// Обработчик для кнопки Stop
 stopBtn.addEventListener('click', () => {
     video.pause();
     video.currentTime = 0;
     playPauseBtn.textContent = 'Play';
 });
 
-// Update seek bar as video plays
+// Обработчик для ползунка поиска
 video.addEventListener('timeupdate', () => {
-    seekBar.value = (video.currentTime / video.duration) * 100;
+    const value = (video.currentTime / video.duration) * 100;
+    seekBar.value = value;
 });
 
-// Seek video when seeking bar value changes
 seekBar.addEventListener('input', () => {
-    video.currentTime = (seekBar.value / 100) * video.duration;
+    const seekTime = (seekBar.value / 100) * video.duration;
+    video.currentTime = seekTime;
 });
 
-// Fullscreen toggle
+// Обработчик для кнопки полного экрана
 fullScreenBtn.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
+    if (video.requestFullscreen) {
         video.requestFullscreen();
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
+    } else if (video.webkitRequestFullscreen) { // Safari
+        video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) { // IE11
+        video.msRequestFullscreen();
     }
-});
+})  
